@@ -1,10 +1,14 @@
 package org.sp.springapp.controller;
 
 import java.io.File;
+import java.io.IOException;
+
+import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
 
 import org.sp.springapp.domain.Gallery;
+import org.sp.springapp.util.FileManager;
 import org.springframework.stereotype.Controller;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.multipart.MultipartFile;
@@ -34,7 +38,7 @@ public class GalleryController {
 	
 	//글스기 요청 처리
 	@RequestMapping(value="/gallery/regist", method=RequestMethod.POST)
-	public ModelAndView regist(Gallery gallery) {
+	public ModelAndView regist(Gallery gallery, HttpServletRequest request) {
 		//3단계 : 오라클에 글등록 + 파일 업로드 + 
 		System.out.println("title = "+gallery.getTitle());
 		System.out.println("writer = "+gallery.getWriter());
@@ -42,11 +46,32 @@ public class GalleryController {
 		
 		MultipartFile[] photo = gallery.getPhoto();
 		System.out.println("넘겨받은 파일의 수는 "+gallery.getPhoto().length);
+		
+		//jsp의 application 내장객체는 서블릿 api에서 ServletContext 이다.
+		//따라서 이 객체를 얻기 위해 HttpSession을 얻어야 한다.
+		ServletContext context=request.getSession().getServletContext();
+		String path=context.getRealPath("/resources/data/");
+		System.out.println("파일이 저장될 풀 경로는 "+path);
+		
 		for(int i=0;i<photo.length; i++) {
 			String filename=photo[i].getOriginalFilename();
 			System.out.println(filename);
 			
-			File file = new File("");
+			//파일명 만들기
+			String newName=FileManager.createFilename(filename);
+			
+			File file = new File(path+newName);
+			
+			try {
+				photo[i].transferTo(file);
+			} catch (IllegalStateException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			
+			
+			
 			//photo[i].transferTo(파일객체);
 		}
 		
