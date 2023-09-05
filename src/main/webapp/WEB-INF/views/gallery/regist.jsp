@@ -47,8 +47,10 @@ input[type=button]:hover {
 function regist(){
 	$("form").attr({
 		action:"/gallery/regist",
-		method:"poast"
+		method:"post",
+		enctype:"multipart/form-data"
 	});
+	$("form").submit();
 }
 $(function(){
 	$("#bt_regist").click(function(){
