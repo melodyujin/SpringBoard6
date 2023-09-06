@@ -36,7 +36,7 @@ public class GalleryController {
 		
 	}
 	
-	//글스기 요청 처리
+	//글쓰기 요청 처리
 	@RequestMapping(value="/gallery/regist", method=RequestMethod.POST)
 	public ModelAndView regist(Gallery gallery, HttpServletRequest request) {
 		//3단계 : 오라클에 글등록 + 파일 업로드 + 
@@ -45,7 +45,7 @@ public class GalleryController {
 		System.out.println("content = "+gallery.getContent());
 		
 		MultipartFile[] photo = gallery.getPhoto();
-		System.out.println("넘겨받은 파일의 수는 "+gallery.getPhoto().length);
+		System.out.println("넘겨받은 파일의 수는 "+photo.length);
 		
 		//jsp의 application 내장객체는 서블릿 api에서 ServletContext 이다.
 		//따라서 이 객체를 얻기 위해 HttpSession을 얻어야 한다.
@@ -62,6 +62,8 @@ public class GalleryController {
 			
 			File file = new File(path+newName);
 			
+			//photo[i].transferTo(파일객체);
+			
 			try {
 				photo[i].transferTo(file);
 			} catch (IllegalStateException e) {
@@ -70,9 +72,6 @@ public class GalleryController {
 				e.printStackTrace();
 			}
 			
-			
-			
-			//photo[i].transferTo(파일객체);
 		}
 		
 		//메모리상에 올라온 파일들을 서버의 지정된 디레고리에 저장하기
