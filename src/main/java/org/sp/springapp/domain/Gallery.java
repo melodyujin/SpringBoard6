@@ -1,5 +1,7 @@
 package org.sp.springapp.domain;
 
+import java.util.List;
+
 import org.springframework.web.multipart.MultipartFile;
 
 import lombok.Data;
@@ -16,5 +18,6 @@ public class Gallery {
 	
 	//바이너리 파일을 받을 수 있는 자료형
 	MultipartFile[] photo;
+	List<GalleryImg> galleryImgList;
 	
 }
