@@ -24,6 +24,8 @@ public class MybatisGalleryDAO implements GalleryDAO{
 		sqlSession.commit(); //DML인 경우..
 		mybatisConfig.release(sqlSession);
 		
+		//result=0; //일부러 에러 테스트
+		
 		if(result==0) {
 			//개발자가 일부러 관련있는 에러를 일으키자
 			throw new GalleryException("갤러리 등록을 실패했어요");
@@ -32,8 +34,11 @@ public class MybatisGalleryDAO implements GalleryDAO{
 
 	@Override
 	public List selectAll() {
-		// TODO Auto-generated method stub
-		return null;
+		SqlSession sqlSession = mybatisConfig.getSqlSession();
+		List list=sqlSession.selectList("Gallery.selectAll");
+		mybatisConfig.release(sqlSession);
+		
+		return list;
 	}
 
 	@Override

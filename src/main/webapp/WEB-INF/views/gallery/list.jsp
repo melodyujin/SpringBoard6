@@ -1,4 +1,12 @@
+<%@page import="org.sp.springapp.domain.GalleryImg"%>
+<%@page import="org.sp.springapp.domain.Gallery"%>
+<%@page import="java.util.List"%>
+<%@page import="org.sp.springapp.util.Pager"%>
 <%@ page contentType="text/html; charset=UTF-8"%>
+<%
+	Pager pager = (Pager)request.getAttribute("pager");
+	List<Gallery> galleryList = (List)request.getAttribute("galleryList");
+%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -19,6 +27,9 @@ th, td {
 tr:nth-child(even) {
 	background-color: #f2f2f2;
 }
+a{
+	text-decoration: none;
+}
 </style>
 <%@ include file="./inc/head_link.jsp" %>
 <script type="text/javascript">
@@ -31,9 +42,8 @@ $(function(){
 </head>
 <body>
 
-	<h2>Zebra Striped Table</h2>
-	<p>For zebra-striped tables, use the nth-child() selector and add a
-		background-color to all even (or odd) table rows:</p>
+	<h2>공지게시판</h2>
+	<p>관리자모드 공지게시판</p>
 
 	<table>
 		<tr>
@@ -44,19 +54,52 @@ $(function(){
 			<th>등록일</th>
 			<th>조회수</th>
 		</tr>
+		<%int num=pager.getNum(); %>
+		<%int curPos=pager.getCurPos(); //페이지당 List의 시작 index %>
+		<%=curPos %>
+		<%for(int i=1;i<=pager.getPageSize();i++){ %>
+		<%if(num<1)break; %>
+		<% Gallery gallery=galleryList.get(curPos++); %>
+		<%GalleryImg galleryImg=gallery.getGalleryImgList().get(0); %>
 		<tr>
-			<td>Jill</td>
-			<td>Jill</td>
+			<td><%=num--%></td>
+			<td><img src="/static/data/<%=galleryImg.getFilename()%>"></td>
 			<td>Jill</td>
 			<td>Smith</td>
 			<td>Smith</td>
 			<td>50</td>
 		</tr>
+		<%} %>
+		
+		<tr>
+			<td colspan="6">
+			
+			<%if(pager.getFirstPage()-1 < 1){ %>
+				<a href="javascript:alert('이전 페이지가 없습니다');">◀</a>
+			<%}else{ %>
+				<a href="/gallery/list?currentPage=<%=pager.getFirstPage()-1%>">◀</a>
+			<%} %>
+			
+			<%for(int i=pager.getFirstPage(); i<=pager.getLastPage();i++){ %>
+			<%if(i>pager.getTotalPage())break; %>
+				<a href="/gallery/list?currentPage=<%=i%>">[<%=i %>]</a>
+			<%} %>
+			
+			<%if(pager.getLastPage()+1 > pager.getTotalPage()){ %>
+				<a href="javascript:alert('다음 페이지가 없습니다');">▶</a>
+			<%}else{ %>
+				<a href="/gallery/list?currentPage=<%=pager.getLastPage()+1%>">▶</a>
+			<%} %>
+			
+			</td>
+		</tr>
+		
 		<tr>
 			<td colspan="6">
 				<button>글쓰기</button>
 			</td>
 		</tr>
+		
 	</table>
 
 </body>

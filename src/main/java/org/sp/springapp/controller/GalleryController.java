@@ -3,15 +3,21 @@ package org.sp.springapp.controller;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.management.loading.PrivateClassLoader;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 
 import org.sp.springapp.domain.Gallery;
 import org.sp.springapp.domain.GalleryImg;
+import org.sp.springapp.exception.FileException;
+import org.sp.springapp.exception.GalleryException;
+import org.sp.springapp.exception.GalleryImgException;
 import org.sp.springapp.model.gallery.GalleryService;
 import org.sp.springapp.util.FileManager;
+import org.sp.springapp.util.Pager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.multipart.MultipartFile;
@@ -40,18 +46,33 @@ public class GalleryController {
 	@Autowired
 	private FileManager fileManager;
 	
+	@Autowired
+	private Pager pager;
+	
 	//게시판 목록 요청  처리
 	@RequestMapping(value="/gallery/list", method=RequestMethod.GET)
-	public ModelAndView getList() {
-		//3단계 : 일 시키기
+	public ModelAndView getList(HttpServletRequest request) {
+		//3단계 : 서비스 일 시키기
+		List galleryList=galleryService.selectAll();
+		
+		/*
+		List list = new ArrayList();
+		for(int i=0;i<26;i++) {
+			list.add("");
+		}
+		*/
 		
 		//4단계 : 목록 저장
+		pager.init(galleryList, request);
+		
 		ModelAndView mav = new ModelAndView("gallery/list");
+		mav.addObject("galleryList", galleryList); //요청 객체에 galleryList 저장
+		mav.addObject("pager", pager); //요청객체에 pager 저장 저장했다는 것은 포워딩이 필요하다는 것임
 		
 		return mav;
 	}
 
-	//글스기 폼 요청
+	//글쓰기 폼 요청
 	@RequestMapping(value="/gallery/registform", method=RequestMethod.GET)
 	public String getForm() {
 		return "gallery/regist";
@@ -60,7 +81,7 @@ public class GalleryController {
 	
 	//글쓰기 요청 처리
 	@RequestMapping(value="/gallery/regist", method=RequestMethod.POST)
-	public ModelAndView regist(Gallery gallery, HttpServletRequest request) {
+	public String regist(Gallery gallery, HttpServletRequest request) {
 		//3단계 : 오라클에 글등록 + 파일 업로드 + 
 		
 		/*
@@ -86,7 +107,7 @@ public class GalleryController {
 			
 			GalleryImg galleryImg = new GalleryImg(); //empty
 			galleryImg.setGallery(gallery); //이 시점의 gallery DTO에는 아직, gallery_idx는 0인 상태
-			galleryImg.setFilename(filename);
+			galleryImg.setFilename(name); //새롭게 바뀐 이름으로 대체
 			
 			imgList.add(galleryImg);
 		}
@@ -114,10 +135,50 @@ public class GalleryController {
 		//Gallery DTO에 GalleryImg 들을 생성하여 List로 넣어두기
 		gallery.setGalleryImgList(imgList);
 		
+		//서비스에서 예외가 발생했을 땐, 스프링의 컨트롤러는 예외가 감지하는 이벤트가 발생함..
+		//이때 이 이벤트를 처리할 수 있는 메서드를 정의해놓고 개발자가 알맞는 에러 페이지 및 메시지를 구성
 		galleryService.regist(gallery); //글 등록 요청
 		
-		
-		return null;
+		return "redirect:/gallery/list"; //형님인 DispatcherServlet이 ViewResolver 를 이용하여, 이 몸뚱아리를 해석..
 		
 	}
+	
+	//어떠한 예외가 발생했을 때, 어떤 처리를 할지 아래의 메서드에서 로직 작성..
+	@ExceptionHandler(FileException.class)
+	public ModelAndView handle(FileException e) {
+		//jsp에서 에러 메시지를 보여줘야 하므로, 요청은 유지가 되어야 한다..
+		//즉 저장할 것이 있고, 가져갈 것이 있다..
+		
+		ModelAndView mav = new ModelAndView();
+		mav.addObject("e", e); //에러 객체 저장
+		mav.setViewName("error/result");
+		
+		return mav;
+	}
+	
+	//어떠한 예외가 발생했을 때, 어떤 처리를 할지 아래의 메서드에서 로직 작성..
+	@ExceptionHandler(GalleryException.class)
+	public ModelAndView handle(GalleryException e) {
+		//jsp에서 에러 메시지를 보여줘야 하므로, 요청은 유지가 되어야 한다..
+		//즉 저장할 것이 있고, 가져갈 것이 있다..
+		
+		ModelAndView mav = new ModelAndView();
+		mav.addObject("e", e); //에러 객체 저장
+		mav.setViewName("error/result");
+		
+		return mav;
+	}
+	
+	@ExceptionHandler(GalleryImgException.class)
+	public ModelAndView handle(GalleryImgException e) {
+		//jsp에서 에러 메시지를 보여줘야 하므로, 요청은 유지가 되어야 한다..
+		//즉 저장할 것이 있고, 가져갈 것이 있다..
+		
+		ModelAndView mav = new ModelAndView();
+		mav.addObject("e", e); //에러 객체 저장
+		mav.setViewName("error/result");
+		
+		return mav;
+	}
+	
 }
