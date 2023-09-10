@@ -3,6 +3,7 @@ package org.sp.springapp.model.gallery;
 import java.util.List;
 
 import org.apache.ibatis.session.SqlSession;
+import org.mybatis.spring.SqlSessionTemplate;
 import org.sp.springapp.domain.Gallery;
 import org.sp.springapp.exception.GalleryException;
 import org.sp.springapp.mybatis.MybatisConfig;
@@ -13,16 +14,12 @@ import org.springframework.stereotype.Repository;
 public class MybatisGalleryDAO implements GalleryDAO{
 
 	@Autowired
-	private MybatisConfig mybatisConfig;
+	private SqlSessionTemplate sqlSessionTemplate;
 	
 	@Override
 	public void insert(Gallery gallery) throws GalleryException{
-		SqlSession sqlSession=mybatisConfig.getSqlSession();
 		
-		int result = sqlSession.insert("Gallery.insert", gallery);
-		
-		sqlSession.commit(); //DML인 경우..
-		mybatisConfig.release(sqlSession);
+		int result = sqlSessionTemplate.insert("Gallery.insert", gallery);
 		
 		//result=0; //일부러 에러 테스트
 		
@@ -34,17 +31,14 @@ public class MybatisGalleryDAO implements GalleryDAO{
 
 	@Override
 	public List selectAll() {
-		SqlSession sqlSession = mybatisConfig.getSqlSession();
-		List list=sqlSession.selectList("Gallery.selectAll");
-		mybatisConfig.release(sqlSession);
-		
+		List list=sqlSessionTemplate.selectList("Gallery.selectAll");
 		return list;
 	}
 
 	@Override
 	public Gallery select(int gallery_idx) {
-		// TODO Auto-generated method stub
-		return null;
+		Gallery gallery=sqlSessionTemplate.selectOne("Gallery.select", gallery_idx);
+		return gallery;
 	}
 
 	@Override

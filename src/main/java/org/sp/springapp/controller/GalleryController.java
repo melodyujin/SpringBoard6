@@ -34,15 +34,6 @@ public class GalleryController {
 	@Autowired
 	private GalleryService galleryService;
 	
-	/*
-	DI를 이용하여, 느슨하게 보유해야 한다
-	@Autowired
-	private GalleryDAO galleryDAO;
-	
-	@Autowired
-	private GalleryImgDAO galleryImgDAO;
-	*/
-	
 	@Autowired
 	private FileManager fileManager;
 	
@@ -54,13 +45,6 @@ public class GalleryController {
 	public ModelAndView getList(HttpServletRequest request) {
 		//3단계 : 서비스 일 시키기
 		List galleryList=galleryService.selectAll();
-		
-		/*
-		List list = new ArrayList();
-		for(int i=0;i<26;i++) {
-			list.add("");
-		}
-		*/
 		
 		//4단계 : 목록 저장
 		pager.init(galleryList, request);
@@ -82,13 +66,7 @@ public class GalleryController {
 	//글쓰기 요청 처리
 	@RequestMapping(value="/gallery/regist", method=RequestMethod.POST)
 	public String regist(Gallery gallery, HttpServletRequest request) {
-		//3단계 : 오라클에 글등록 + 파일 업로드 + 
-		
-		/*
-		System.out.println("title = "+gallery.getTitle());
-		System.out.println("writer = "+gallery.getWriter());
-		System.out.println("content = "+gallery.getContent());
-		*/
+		//3단계 : 오라클에 글등록 + 파일 업로드 
 		
 		MultipartFile[] photo = gallery.getPhoto();
 		System.out.println("넘겨받은 파일의 수는 "+photo.length);
@@ -102,35 +80,18 @@ public class GalleryController {
 		List<GalleryImg> imgList = new ArrayList<GalleryImg>(); //새롭게 생성한 정보(이미지명뿐만아니라부모의pk도 가지고 있다)
 		
 		for(int i=0;i<photo.length; i++) {
-			String filename=photo[i].getOriginalFilename();
-			String name=fileManager.save(path, filename, photo[i]);
-			
-			GalleryImg galleryImg = new GalleryImg(); //empty
-			galleryImg.setGallery(gallery); //이 시점의 gallery DTO에는 아직, gallery_idx는 0인 상태
-			galleryImg.setFilename(name); //새롭게 바뀐 이름으로 대체
-			
-			imgList.add(galleryImg);
+			if(photo[i].isEmpty() == false) { //비어있지 않다면, 즉 업로드가 된 경우만...(비어있지 않은 것만 등록)
+				String filename=photo[i].getOriginalFilename();
+				String name=fileManager.save(path, filename, photo[i]);
+				
+				GalleryImg galleryImg = new GalleryImg(); //empty
+				galleryImg.setGallery(gallery); //이 시점의 gallery DTO에는 아직, gallery_idx는 0인 상태
+				galleryImg.setFilename(name); //새롭게 바뀐 이름으로 대체
+				
+				imgList.add(galleryImg);
+				
+			}
 		}
-		
-		/*Gallery 테이블 insert
-		여기까지는 아직 gallery DTO의 gallery_idx가 채워지지 않은 0인 상태..
-		System.out.println("DAO 동작 전 gallery_idx is "+gallery.getGallery_idx());
-		
-		galleryDAO.insert(gallery);
-		
-		여기서부터는 gallery DTO의 gallery_idx 는 가장 최신의 sequence 값으로 채워져 있는 상태
-		System.out.println("DAO 동작 후 gallery_idx is "+gallery.getGallery_idx());
-		
-		GalleryImg 테이블에 insert
-		업로드한 이미지 수 만큼 insert!
-		for(String name : nameList) {
-			GalleryImg galleryImg=new GalleryImg();
-			galleryImg.setGallery(gallery);//부모의 pk 담기
-			galleryImg.setFilename(name); //이미지명
-			
-			galleryImgDAO.insert(galleryImg);
-		}
-		*/
 		
 		//Gallery DTO에 GalleryImg 들을 생성하여 List로 넣어두기
 		gallery.setGalleryImgList(imgList);
@@ -141,6 +102,20 @@ public class GalleryController {
 		
 		return "redirect:/gallery/list"; //형님인 DispatcherServlet이 ViewResolver 를 이용하여, 이 몸뚱아리를 해석..
 		
+	}
+	
+	//상세보기 요청 처리
+	@RequestMapping(value="/gallery/content", method=RequestMethod.GET)
+	public ModelAndView getContent(int gallery_idx) {
+		//3단계: 데이터 가져오기
+		Gallery gallery=galleryService.select(gallery_idx);
+		
+		//4단계: 가져온 레코드 저장(jsp)
+		ModelAndView mav = new ModelAndView();
+		mav.addObject("gallery", gallery); //request.setAttribute와 같음
+		mav.setViewName("gallery/content");
+		
+		return mav;
 	}
 	
 	//어떠한 예외가 발생했을 때, 어떤 처리를 할지 아래의 메서드에서 로직 작성..

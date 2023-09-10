@@ -43,7 +43,7 @@ $(function(){
 <body>
 
 	<h2>공지게시판</h2>
-	<p>관리자모드 공지게시판</p>
+	<p>고객모드 공지게시판</p>
 
 	<table>
 		<tr>
@@ -56,18 +56,17 @@ $(function(){
 		</tr>
 		<%int num=pager.getNum(); %>
 		<%int curPos=pager.getCurPos(); //페이지당 List의 시작 index %>
-		<%=curPos %>
 		<%for(int i=1;i<=pager.getPageSize();i++){ %>
 		<%if(num<1)break; %>
 		<% Gallery gallery=galleryList.get(curPos++); %>
 		<%GalleryImg galleryImg=gallery.getGalleryImgList().get(0); %>
 		<tr>
 			<td><%=num--%></td>
-			<td><img src="/static/data/<%=galleryImg.getFilename()%>"></td>
-			<td>Jill</td>
-			<td>Smith</td>
-			<td>Smith</td>
-			<td>50</td>
+			<td><img src="/static/data/<%=galleryImg.getFilename()%>" width="35px"></td>
+			<td><a href="/gallery/content?gallery_idx=<%=gallery.getGallery_idx()%>"><%=gallery.getTitle() %></a></td>
+			<td><%=gallery.getWriter() %></td>
+			<td><%=gallery.getRegdate() %></td>
+			<td><%=gallery.getHit() %></td>
 		</tr>
 		<%} %>
 		

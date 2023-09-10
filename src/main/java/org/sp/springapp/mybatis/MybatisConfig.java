@@ -34,7 +34,7 @@ public class MybatisConfig {
 	
 	//팩토리로부터 SqlSession 가져오는 메서드
 	public SqlSession getSqlSession() {
-		return  sqlSessionFactory.openSession();
+		return sqlSessionFactory.openSession();
 	}
 	
 	//SqlSession 반납

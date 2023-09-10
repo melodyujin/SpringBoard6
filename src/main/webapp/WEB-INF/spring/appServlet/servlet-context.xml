@@ -18,7 +18,8 @@
 	
 	<!-- Enables the Spring MVC @Controller programming model -->
 	<annotation-driven />
-
+	
+	<!-- 아래의 코드도 공통되서 root-context.xml에 가도됨  -->
 	<!-- Handles HTTP GET requests for /resources/** by efficiently serving up static resources in the ${webappRoot}/resources directory -->
 	<resources mapping="/static/**" location="/resources/" />
 
@@ -30,19 +31,8 @@
 		<beans:property name="prefix" value="/WEB-INF/views/" />
 		<beans:property name="suffix" value=".jsp" />
 	-->
-	
-	<!-- 업로드 설정 -->
-	<beans:bean id="multipartResolver" 
-		class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
-		<beans:property name="maxUploadSize" value="2097152"/>	
-	</beans:bean>
-	
-	<!-- mybatis 팩토리 보유객체 등록  -->
-	<beans:bean class="org.sp.springapp.mybatis.MybatisConfig" 
-		id="mybatisConfig" factory-method="getInstance"/>
-
 		
-	<context:component-scan base-package="org.sp.springapp" />
+	<context:component-scan base-package="org.sp.springapp.controller" />
 	
 	
 </beans:beans>

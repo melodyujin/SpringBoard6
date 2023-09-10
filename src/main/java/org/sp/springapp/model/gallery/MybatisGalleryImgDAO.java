@@ -3,6 +3,7 @@ package org.sp.springapp.model.gallery;
 import java.util.List;
 
 import org.apache.ibatis.session.SqlSession;
+import org.mybatis.spring.SqlSessionTemplate;
 import org.sp.springapp.domain.GalleryImg;
 import org.sp.springapp.exception.GalleryImgException;
 import org.sp.springapp.mybatis.MybatisConfig;
@@ -12,15 +13,14 @@ import org.springframework.stereotype.Repository;
 public class MybatisGalleryImgDAO implements GalleryImgDAO{
 	
 	@Autowired
-	private MybatisConfig mybatisConfig;
+	private SqlSessionTemplate sqlSessionTemplate;
 	
 	@Override
 	public void insert(GalleryImg galleryImg) throws GalleryImgException {
-		SqlSession sqlSession=mybatisConfig.getSqlSession();
 		
-		int result = sqlSession.insert("GalleryImg.insert", galleryImg);
-		sqlSession.commit();
-		mybatisConfig.release(sqlSession);
+		int result = sqlSessionTemplate.insert("GalleryImg.insert", galleryImg);
+		
+		//result=0; 
 		
 		if(result==0) {
 			throw new GalleryImgException("이미지 등록에 실패");

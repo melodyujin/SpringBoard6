@@ -8,6 +8,8 @@ import org.sp.springapp.exception.GalleryException;
 import org.sp.springapp.exception.GalleryImgException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 //서비스 인테페이스를 구현한 하위 서비스 객체
@@ -15,6 +17,7 @@ public class GalleryServiceImpl implements GalleryService{
 
 	//DAO는 서비스에서 보유해야 한다.. model 영역의 업무이므로,
 	//따라서 두 개 이상의 테이블에 대한 DML 상황에 있어, 트랜젝션 처리 또한 서비스 객체의 몫이다..
+	//DI를 이용하여, 느슨하게 보유해야 한다
 	@Autowired
 	private GalleryDAO galleryDAO;
 	
@@ -24,6 +27,7 @@ public class GalleryServiceImpl implements GalleryService{
 	@Override
 	//DAO로부터 전달받은 예외 객체는, 서비스가 방치하지 말고, Controller까지 전달을 해줘야
 	//웹브라우저인 클라이언트에게 적절한 에러 화면을 제공할 수 있다..
+	@Transactional(propagation = Propagation.REQUIRED)
 	public void regist(Gallery gallery) throws GalleryException, GalleryImgException{ 
 		//두개의 dao를 이용하여 글 등록 업무처리..
 		galleryDAO.insert(gallery); //mybatis 에 의해 gallery_idx
@@ -43,8 +47,7 @@ public class GalleryServiceImpl implements GalleryService{
 
 	@Override
 	public Gallery select(int gallery_idx) {
-		// TODO Auto-generated method stub
-		return null;
+		return galleryDAO.select(gallery_idx);
 	}
 
 	@Override
