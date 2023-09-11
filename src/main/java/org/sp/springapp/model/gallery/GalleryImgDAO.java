@@ -10,5 +10,6 @@ public interface GalleryImgDAO {
 	public List selectAll(); //모든 데이터 가져오기
 	public GalleryImg select(int gallery_img_idx); //한건 가져오기
 	public void update(GalleryImg galleryImg);
-	public void delete(int gallery_img_idx);
+	public void delete(int gallery_img_idx); //한건삭제
+	public void deleteByGalleryIdx(int gallery_idx); //부모의 fkey를 이용한 삭제
 }

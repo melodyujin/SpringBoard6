@@ -51,4 +51,11 @@ public class MybatisGalleryImgDAO implements GalleryImgDAO{
 		
 	}
 
+	@Override
+	public void deleteByGalleryIdx(int gallery_idx) throws GalleryImgException{
+		int result=sqlSessionTemplate.delete("GalleryImg.deleteByGalleryIdx", gallery_idx);
+		if(result<1) {
+			throw new GalleryImgException("이미지레코드 삭제실패");
+		}
+	}
 }

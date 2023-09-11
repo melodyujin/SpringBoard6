@@ -46,4 +46,14 @@ public class FileManager {
 		
 		return newName;
 	}
+	
+	//파일삭제
+	public void remove(String path) throws FileException{
+		
+		File file = new File(path);
+		boolean result=file.delete(); //파일삭제
+		if(result==false) {
+			throw new FileException("파일삭제 실패입니다");
+		}
+	}
 }

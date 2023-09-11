@@ -12,4 +12,10 @@
 	<select id="selectByGalleryIdx" parameterType="int" resultType="GalleryImg">
 		select * from gallery_img where gallery_idx=#{gallery_idx}
 	</select>
+	
+	<!-- 부모에 딸려있는 레코드만 삭제 -->
+	<delete id="deleteByGalleryIdx" parameterType="int">
+		delete gallery_img where gallery_idx=#{gallery_idx}
+	</delete>
+	
 </mapper>

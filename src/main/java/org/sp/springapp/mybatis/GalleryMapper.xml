@@ -45,4 +45,9 @@
 		where gallery_idx=#{gallery_idx}
 	</select>
 	
+	<!-- 게시물 1건 삭제 -->
+	<delete id="delete" parameterType="int">
+		delete gallery where gallery_idx=#{gallery_idx}
+	</delete>
+	
 </mapper>

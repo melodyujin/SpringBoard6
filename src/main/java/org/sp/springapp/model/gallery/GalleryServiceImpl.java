@@ -57,8 +57,12 @@ public class GalleryServiceImpl implements GalleryService{
 	}
 
 	@Override
-	public void delete(int gallery_idx) {
-		// TODO Auto-generated method stub
+	public void delete(int gallery_idx) throws GalleryException, GalleryImgException{
+		//이미지 레코드 삭제
+		galleryImgDAO.deleteByGalleryIdx(gallery_idx);
+		
+		//갤러리 삭제
+		galleryDAO.delete(gallery_idx);
 		
 	}
 	

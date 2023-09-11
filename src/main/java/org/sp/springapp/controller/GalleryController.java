@@ -1,5 +1,6 @@
 package org.sp.springapp.controller;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -116,6 +117,27 @@ public class GalleryController {
 		mav.setViewName("gallery/content");
 		
 		return mav;
+	}
+	
+	//삭제요청 처리
+	@RequestMapping(value="/gallery/delete", method = RequestMethod.POST)
+	public String del(int gallery_idx, String[] filename, HttpServletRequest request) {
+		//3단계: 삭제
+		
+		//파일삭제
+		ServletContext context=request.getSession().getServletContext();
+		for(String str:filename) {
+			System.out.println("파일명 배열은 "+str);
+			
+			//삭제될 파일의 풀 경로 얻기
+			String path=context.getRealPath("/resources/data/"+str);
+			fileManager.remove(path);
+		}
+		
+		galleryService.delete(gallery_idx); //db 삭제
+		
+		//4단계 : 리스트를 재요청 들어오게 할 것이므로, jsp로 가져갈 것이 없다
+		return "redirect:gallery/list";
 	}
 	
 	//어떠한 예외가 발생했을 때, 어떤 처리를 할지 아래의 메서드에서 로직 작성..
