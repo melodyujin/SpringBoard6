@@ -39,7 +39,7 @@
 		order by gallery_idx desc
 	</select>
 	
-	<!-- 게시물 한건 가져오기 -->
+	<!-- 게시물 1건 가져오기 -->
 	<select id="select" resultMap="galleryMap" parameterType="int">
 		<include refid="selectSql"/>
 		where gallery_idx=#{gallery_idx}
@@ -49,5 +49,11 @@
 	<delete id="delete" parameterType="int">
 		delete gallery where gallery_idx=#{gallery_idx}
 	</delete>
+	
+	<!-- 게시물 1건수정 -->
+	<update id="update" parameterType="Gallery">
+		update gallery set title=#{title}, writer=#{writer}, content=#{content} where gallery_idx=#{gallery_idx} 	
+	</update>
+	
 	
 </mapper>

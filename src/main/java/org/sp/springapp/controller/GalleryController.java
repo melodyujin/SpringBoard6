@@ -137,9 +137,17 @@ public class GalleryController {
 		galleryService.delete(gallery_idx); //db 삭제
 		
 		//4단계 : 리스트를 재요청 들어오게 할 것이므로, jsp로 가져갈 것이 없다
-		return "redirect:gallery/list";
+		return "redirect:/gallery/list";
 	}
 	
+	//수정요청 처리
+	@RequestMapping(value="/gallery/update", method = RequestMethod.POST)
+	public String update(Gallery gallery) {
+		
+		galleryService.update(gallery);
+		
+		return "redirect:/gallery/list";
+	}
 	//어떠한 예외가 발생했을 때, 어떤 처리를 할지 아래의 메서드에서 로직 작성..
 	@ExceptionHandler(FileException.class)
 	public ModelAndView handle(FileException e) {

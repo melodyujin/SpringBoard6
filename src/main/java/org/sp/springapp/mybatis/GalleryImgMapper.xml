@@ -18,4 +18,9 @@
 		delete gallery_img where gallery_idx=#{gallery_idx}
 	</delete>
 	
+	<!-- 부모에 딸려있는 레코드 수정?
+	<update id="updateByGalleryIdx" parameterType="Gallery">
+		
+	</update>
+	-->
 </mapper>

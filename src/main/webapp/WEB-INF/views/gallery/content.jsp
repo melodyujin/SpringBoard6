@@ -58,12 +58,15 @@ function regist(){
 	$("form").submit();
 }
 $(function(){
+	
 	$("#bt_edit").click(function(){
 		if(confirm("수정하시겠어요?")){
 			$("form").attr({
-				action:"gallery/edit",
-				method:"post"
+				action:"/gallery/update",
+				method:"post",
+				enctype:"multipart/form-data"
 			});
+			$("form").submit();
 		}
 	});
 	

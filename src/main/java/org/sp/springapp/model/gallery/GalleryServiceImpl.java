@@ -52,8 +52,7 @@ public class GalleryServiceImpl implements GalleryService{
 
 	@Override
 	public void update(Gallery gallery) {
-		// TODO Auto-generated method stub
-		
+		galleryDAO.update(gallery); 
 	}
 
 	@Override
@@ -65,6 +64,5 @@ public class GalleryServiceImpl implements GalleryService{
 		galleryDAO.delete(gallery_idx);
 		
 	}
-	
 	
 }
