@@ -143,6 +143,7 @@ public class GalleryController {
 	//수정요청 처리
 	@RequestMapping(value="/gallery/update", method = RequestMethod.POST)
 	public String update(Gallery gallery) {
+		System.out.println("==== /gallery/update 실행");
 		
 		galleryService.update(gallery);
 		
