@@ -10,10 +10,11 @@
 		http://www.springframework.org/schema/context https://www.springframework.org/schema/context/spring-context.xsd">
 
 	<!-- 각 요청마다 어떤 하위 컨트롤러가 동작할지 여부에 대한 매핑은 스프링 버전이 올라가면서 현재 xml에서 하기보다는  
-		Java Code 안에 명시한다-->	
+		Java Code 안에 명시한다(handlerMapping은 디폴트이므로 명시 필요하지 않다)-->	
 	<!-- <beans:bean id="handlerMapping" 
 		class="org.springframework.web.servlet.mvc.annotation.DefaultAnnotationHandlerMapping"></beans:bean>
 	 -->
+	 
 	<!-- DispatcherServlet Context: defines this servlet's request-processing infrastructure -->
 	
 	<!-- Enables the Spring MVC @Controller programming model -->
@@ -32,7 +33,7 @@
 		<beans:property name="suffix" value=".jsp" />
 	-->
 		
-	<context:component-scan base-package="org.sp.springapp.controller.client" />
+	<context:component-scan base-package="org.sp.springapp.controller.admin" />
 	
 	
 </beans:beans>

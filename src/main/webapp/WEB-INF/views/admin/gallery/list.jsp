@@ -32,7 +32,7 @@ a{
 }
 p{text-align:right}
 </style>
-<%@ include file="./inc/head_link.jsp" %>
+<%@ include file="../inc/head_link.jsp" %>
 <script type="text/javascript">
 $(function(){
 	$("button").click(function(){

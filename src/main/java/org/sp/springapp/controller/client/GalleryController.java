@@ -1,4 +1,4 @@
-package org.sp.springapp.controller;
+package org.sp.springapp.controller.client;
 
 import java.io.File;
 import java.util.ArrayList;
