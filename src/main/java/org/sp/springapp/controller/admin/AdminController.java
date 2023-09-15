@@ -25,7 +25,12 @@ public class AdminController {
 		ModelAndView mav = new ModelAndView("admin/loginform");
 		return mav;
 	}
-	
+	//회원가입폼 요청처리
+	@GetMapping("/joinform")
+	public ModelAndView joinform() { //Admin.index.jsp를 보여줌
+		ModelAndView mav = new ModelAndView("admin/joinform");
+		return mav;
+	}
 	//관리자 메인 요청 처리
 	@GetMapping("/main")
 	public ModelAndView getMain() { //Admin.index.jsp를 보여줌
@@ -47,6 +52,21 @@ public class AdminController {
 		ModelAndView mav = new ModelAndView("redirect:/admin/main"); //관리자 페이지 이동, main은 index.jsp 페이지를 말함
 		
 		return mav;
+	}
+	
+	//회원가입 요청처리
+	@PostMapping("/regist")
+	public String regist(Admin admin, HttpServletRequest request) {
+		System.out.println(admin.getId());
+		System.out.println(admin.getPass());
+		System.out.println(admin.getName());
+		System.out.println(admin.getEmail());
+		System.out.println(admin.getPhone());
+		
+		adminService.regist(admin);
+		
+		
+		return "redirect:/admin/loginform";
 	}
 	
 	@ExceptionHandler(AdminException.class)

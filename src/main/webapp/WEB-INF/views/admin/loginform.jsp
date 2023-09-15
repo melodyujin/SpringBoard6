@@ -24,11 +24,11 @@ body {
 
 /* style inputs and link buttons */
 input, .btn {
-	width: 100%;
+	width: 90%;
 	padding: 12px;
 	border: none;
 	border-radius: 4px;
-	margin: 5px 0;
+	margin: 5px 70px;
 	opacity: 0.85;
 	display: inline-block;
 	font-size: 17px;
@@ -40,21 +40,7 @@ input:hover, .btn:hover {
 	opacity: 1;
 }
 
-/* add appropriate colors to fb, twitter and google buttons */
-.fb {
-	background-color: #3B5998;
-	color: white;
-}
 
-.twitter {
-	background-color: #55ACEE;
-	color: white;
-}
-
-.google {
-	background-color: #dd4b39;
-	color: white;
-}
 
 /* style the submit button */
 input[type=submit] {
@@ -147,6 +133,13 @@ $(function(){
 		loginCheck();
 	});
 });
+
+$(function(){
+	$("#bt_join").click(function(){
+		//location.href="/admin/joinform"
+		$(location).attr("href", "/admin/joinform");
+	});
+});
 </script>
 </head>
 <body>
@@ -158,24 +151,7 @@ $(function(){
 		<form>
 			<div class="row">
 				<h1 style="text-align: center">관리자 로그인</h1>
-				<div class="vl">
-					<span class="vl-innertext">or</span>
-				</div>
-
-				<div class="col">
-					<a href="#" class="fb btn"> <i class="fa fa-facebook fa-fw"></i>
-						Login with Facebook
-					</a> <a href="#" class="twitter btn"> <i
-						class="fa fa-twitter fa-fw"></i> Login with Twitter
-					</a> <a href="#" class="google btn"><i class="fa fa-google fa-fw">
-					</i> Login with Google+ </a>
-				</div>
-
-				<div class="col">
-					<div class="hide-md-lg">
-						<p>Or sign in manually:</p>
-					</div>
-
+				
 					<input type="text" name="id" placeholder="아이디 입력" required>
 					<input type="password" name="pass" placeholder="비밀번호 입력" required> 
 					<input type="submit" value="Login" id="bt_login">
@@ -188,7 +164,7 @@ $(function(){
 	<div class="bottom-container">
 		<div class="row">
 			<div class="col">
-				<a href="#" style="color: white" class="btn">Sign up</a>
+				<a href="#" style="color: white" class="btn" id="bt_join">Sign up</a>
 			</div>
 			<div class="col">
 				<a href="#" style="color: white" class="btn">Forgot password?</a>
